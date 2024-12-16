@@ -37,5 +37,5 @@
 
   # execute java springboot application on folder /tmp/cliente/target
   - name: Execute java springboot application on folder /tmp/cliente/target
-    ansible.builtin.command: /tmp/calculadora/executa.sh
+    ansible.builtin.command: sh /tmp/calculadora/executa.sh
     
