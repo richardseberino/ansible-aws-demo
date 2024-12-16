@@ -37,6 +37,5 @@
 
   # execute java springboot application on folder /tmp/cliente/target
   - name: Execute java springboot application on folder /tmp/cliente/target
-    ansible.builtin.command: nohup java -jar /tmp/calculadora/target/quarkus-app/quarkus-run.jar > /tmp/calculadora.logs &
-    poll: 0
+    ansible.builtin.command: /tmp/calculadora/executa.sh
     
