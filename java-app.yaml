@@ -1,0 +1,41 @@
+- name: Prepare application on server
+  hosts: all
+  tasks:
+  #update apt repo on ubuntu
+  - name: Update apt repo on ubuntu
+    become: true
+    when: ansible_distribution == 'Ubuntu'
+    ansible.builtin.apt:
+      update_cache: true
+
+  # install java on ubuntu
+  - name: Install java on ubuntu
+    become: true
+    when: ansible_distribution == "Ubuntu"
+    ansible.builtin.package:
+      name: openjdk-21-jdk
+      state: present
+
+  # install maven on ubuntu
+  - name: Install maven on ubuntu
+    become: true
+    when: ansible_distribution == "Ubuntu"
+    ansible.builtin.package:
+      name: maven
+      state: present
+
+  # clone github repo from https://github.com/richardseberino/calculadora on folder /tmp
+  - name: Clone github repo from https://github.com/richardseberino/calculadora on folder
+      /tmp
+    ansible.builtin.git:
+      repo: https://github.com/richardseberino/calculadora
+      dest: /tmp/calculadora
+
+  # compile code using maven on folder /tmp/cliente
+  - name: Compile code using maven on folder /tmp/calculadora
+    ansible.builtin.command: mvn -f /tmp/calculadora/pom.xml install -DskipTests
+
+  # execute java springboot application on folder /tmp/cliente/target
+  - name: Execute java springboot application on folder /tmp/cliente/target
+    ansible.builtin.command: nohup java -jar /tmp/calculadora/target/quarkus-app/quarkus-run.jar > /tmp/calculadora.logs &
+    async: true
