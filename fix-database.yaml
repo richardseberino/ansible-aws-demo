@@ -1,0 +1,14 @@
+- name: Restaura Banco de dados do PIX
+  hosts: all
+  tasks:
+  - name: Faz Login no OpenShift
+    ansible.builtin.command: oc login -u apikey -p  vut4he4gSsIr4IHh6ii3v-8688Th1-yu9_H7ReyMKoGD --server https://c116-e.us-south.containers.cloud.ibm.com:32492
+
+  - name: Copia o baackup do banco de dados para dentro do Pod
+    ansible.builtin.command: oc cp /root/cassandra.sql -n tef cassandra-0:/tmp
+    
+  - name: Executa o restore do banco de dados
+    ansible.builtin.command: oc exec -ti cassandra-0 -n tef -- cqlsh -u cassandra -p cassandra -f /tmp/cassandra.sql
+    
+  - name: Desloga do OpenShift
+    ansible.builtin.command: oc logout
